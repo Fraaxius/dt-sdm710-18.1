@@ -961,6 +961,8 @@ void LocApiV02 ::
             (time_info_current.tv_nsec)/1e6;
     }
 
+    //Use this bit to indicate the injected position source is NLP
+    location.techMask |= LOCATION_TECHNOLOGY_WIFI_BIT;
     injectPosition(location, onDemandCpi);
 }
 
@@ -1015,7 +1017,11 @@ void LocApiV02::injectPosition(const Location& location, bool onDemandCpi)
     }
 
     injectPositionReq.positionSrc_valid = 1;
-    injectPositionReq.positionSrc = eQMI_LOC_POSITION_SRC_OTHER_V02;
+    if (LOCATION_TECHNOLOGY_WIFI_BIT & location.techMask) {
+        injectPositionReq.positionSrc = eQMI_LOC_POSITION_SRC_WIFI_V02;
+    } else {
+        injectPositionReq.positionSrc = eQMI_LOC_POSITION_SRC_OTHER_V02;
+    }
 
     if (onDemandCpi) {
         injectPositionReq.onDemandCpi_valid = 1;
@@ -3454,7 +3460,7 @@ void  LocApiV02 :: reportSv (
 
                 LOC_LOGv("i:%d sv-id:%d count:%d sys:%d en:0x%" PRIx64,
                     i, sv_info_ptr->gnssSvId, SvNotify.count, sv_info_ptr->system,
-                    gnss_report_ptr->gnssSignalTypeList[SvNotify.count]);
+                    gnss_report_ptr->gnssSignalTypeList[i]);
 
                 GnssSv &gnssSv_ref = SvNotify.gnssSvs[SvNotify.count];
                 bool bSvIdIsValid = false;
@@ -3555,17 +3561,17 @@ void  LocApiV02 :: reportSv (
                             LOC_LOGv("gloFrequency = 0x%X", gloFrequency);
                         }
 
-                        if (gnss_report_ptr->gnssSignalTypeList[SvNotify.count] != 0) {
+                        if (gnss_report_ptr->gnssSignalTypeList[i] != 0) {
                             gnssSv_ref.carrierFrequencyHz =
                                     convertSignalTypeToCarrierFrequency(
-                                        gnss_report_ptr->gnssSignalTypeList[SvNotify.count],
+                                        gnss_report_ptr->gnssSignalTypeList[i],
                                         gloFrequency);
                             mask |= GNSS_SV_OPTIONS_HAS_CARRIER_FREQUENCY_BIT;
                             gnssSv_ref.gnssSignalTypeMask = convertQmiGnssSignalType(
-                                    gnss_report_ptr->gnssSignalTypeList[SvNotify.count]);
+                                    gnss_report_ptr->gnssSignalTypeList[i]);
                             LOC_LOGd("sv id %d, qmi signal type: 0x%" PRIx64 ", "
                                      "hal signal type: 0x%x", gnssSv_ref.svId,
-                                     gnss_report_ptr->gnssSignalTypeList[SvNotify.count],
+                                     gnss_report_ptr->gnssSignalTypeList[i],
                                      gnssSv_ref.gnssSignalTypeMask);
                         }
                     }
