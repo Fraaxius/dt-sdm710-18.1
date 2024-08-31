@@ -317,10 +317,6 @@ PRODUCT_COPY_FILES += $(LOCAL_KERNEL):kernel
 # Kernel Headers
 PRODUCT_VENDOR_KERNEL_HEADERS := $(TARGET_KERNEL_DIR)/kernel-headers
 
-# Lights
-PRODUCT_PACKAGES += \
-    android.hardware.light@2.0-service.motorola_sdm710
-
 # LiveDisplay
 PRODUCT_PACKAGES += \
     vendor.lineage.livedisplay@2.0-service-sdm \
