@@ -322,6 +322,15 @@ PRODUCT_PACKAGES += \
     ethertypes \
     libebtc
 
+# Kernel
+TARGET_KERNEL_DIR ?= device/motorola/astro-kernel
+LOCAL_KERNEL := $(TARGET_KERNEL_DIR)/Image
+
+PRODUCT_COPY_FILES += $(LOCAL_KERNEL):kernel
+
+# Kernel Headers
+PRODUCT_VENDOR_KERNEL_HEADERS := $(TARGET_KERNEL_DIR)/kernel-headers
+
 # Lights
 PRODUCT_PACKAGES += \
     android.hardware.light@2.0-service.motorola_sdm710
