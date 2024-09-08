@@ -308,20 +308,6 @@ PRODUCT_PACKAGES += \
     ethertypes \
     libebtc
 
-# Kernel
-TARGET_KERNEL_DIR ?= device/motorola/astro-kernel
-LOCAL_KERNEL := $(TARGET_KERNEL_DIR)/Image
-
-PRODUCT_COPY_FILES += $(LOCAL_KERNEL):kernel
-
-# Kernel Headers
-PRODUCT_VENDOR_KERNEL_HEADERS := $(TARGET_KERNEL_DIR)/kernel-headers
-
-# LiveDisplay
-PRODUCT_PACKAGES += \
-    vendor.lineage.livedisplay@2.0-service-sdm \
-    vendor.lineage.livedisplay@2.0-service-sysfs.motorola_sdm710
-
 # Media
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/media_codecs.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml \
@@ -480,10 +466,6 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES_DEBUG += \
     update_engine_client
-
-# Trust HAL
-PRODUCT_PACKAGES += \
-    vendor.lineage.trust@1.0-service
 
 # USB
 PRODUCT_PACKAGES += \
