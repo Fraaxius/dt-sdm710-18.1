@@ -43,9 +43,12 @@ AB_OTA_UPDATER := true
 AB_OTA_PARTITIONS += \
     boot \
     dtbo \
+    product \
+    recovery \
     system \
     vendor \
-    vbmeta
+    vbmeta \
+    vbmeta_system
 
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
@@ -56,9 +59,9 @@ AB_OTA_POSTINSTALL_CONFIG += \
 PRODUCT_PACKAGES += \
     otapreopt_script
 
-ifeq ($(filter %_olson,$(TARGET_PRODUCT)),)
-$(call inherit-product, device/motorola/sm6150-common/common_dynamic.mk)
-endif
+PRODUCT_BUILD_SUPER_PARTITION := false
+PRODUCT_SHIPPING_API_LEVEL := 29
+PRODUCT_USE_DYNAMIC_PARTITIONS := true
 
 # Properties
 -include $(LOCAL_PATH)/properties.mk
@@ -210,6 +213,9 @@ PRODUCT_PACKAGES += \
     init.target.rc \
     ueventd.qcom.rc
 
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/rootdir/etc/fstab.qcom:$(TARGET_COPY_OUT_RAMDISK)/fstab.qcom
+
 # Cryptfshw
 PRODUCT_PACKAGES += \
     vendor.qti.hardware.cryptfshw@1.0.vendor
@@ -246,6 +252,10 @@ PRODUCT_PACKAGES += \
 # DRM
 PRODUCT_PACKAGES += \
     android.hardware.drm@1.3-service.clearkey
+
+# fastbootd
+PRODUCT_PACKAGES += \
+    fastbootd
 
 # For config.fs
 PRODUCT_PACKAGES += \
